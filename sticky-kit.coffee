@@ -11,7 +11,8 @@ $.fn.stick_in_parent = (opts={}) ->
     inner_scrolling
     recalc_every
     parent: parent_selector
-    offset_top
+    offset_top,
+    offset_top_element,
     spacer: manual_spacer
     bottoming: enable_bottoming
   } = opts
@@ -20,6 +21,7 @@ $.fn.stick_in_parent = (opts={}) ->
   parent_selector ?= undefined
   inner_scrolling ?= true
   sticky_class ?= "is_stuck"
+  offset_top_element ?= undefined
 
   doc = $(document)
 
@@ -61,6 +63,9 @@ $.fn.stick_in_parent = (opts={}) ->
 
       recalc = ->
         return if detached
+
+        offset_top = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
+
         last_scroll_height = doc.height()
 
         border_top = parseInt parent.css("border-top-width"), 10
@@ -107,7 +112,7 @@ $.fn.stick_in_parent = (opts={}) ->
       return if height == parent_height
 
       last_pos = undefined
-      offset = offset_top
+      offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
 
       recalc_counter = recalc_every
 
@@ -130,6 +135,9 @@ $.fn.stick_in_parent = (opts={}) ->
         if last_pos?
           delta = scroll - last_pos
         last_pos = scroll
+
+        unless recalced
+          offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
 
         if fixed
           if enable_bottoming
