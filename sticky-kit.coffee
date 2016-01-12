@@ -133,13 +133,13 @@ $.fn.stick_in_parent = (opts={}) ->
           recalc()
           recalced = true
 
+        unless recalced
+          offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
+
         scroll = win.scrollTop()
         if last_pos?
           delta = scroll - last_pos
           last_pos = scroll
-
-	      unless recalced
-          offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
 
         viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth or 0)
         always_unstuck = false
