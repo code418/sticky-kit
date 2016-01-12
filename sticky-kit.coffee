@@ -13,11 +13,13 @@ $.fn.stick_in_parent = (opts={}) ->
     parent: parent_selector
     offset_top,
     offset_top_element,
+    min_width,
     spacer: manual_spacer
     bottoming: enable_bottoming
   } = opts
 
   offset_top ?= 0
+  min_width ?= 0
   parent_selector ?= undefined
   inner_scrolling ?= true
   sticky_class ?= "is_stuck"
@@ -136,8 +138,16 @@ $.fn.stick_in_parent = (opts={}) ->
           delta = scroll - last_pos
         last_pos = scroll
 
-        unless recalced
+	unless recalced
           offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
+
+
+        viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth or 0)
+        always_unstuck = false
+
+        if viewport_width < min_width
+          fixed = false
+          always_unstuck = true
 
         if fixed
           if enable_bottoming
@@ -153,7 +163,7 @@ $.fn.stick_in_parent = (opts={}) ->
               }).trigger("sticky_kit:unbottom")
 
           # unfixing
-          if scroll < top
+          if scroll < top or always_unstuck
             fixed = false
             offset = offset_top
 
@@ -186,7 +196,7 @@ $.fn.stick_in_parent = (opts={}) ->
 
         else
           # fixing
-          if scroll > top
+          if scroll > top and !always_unstuck
             fixed = true
             css = {
               position: "fixed"
