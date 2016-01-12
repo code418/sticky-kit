@@ -136,11 +136,10 @@ $.fn.stick_in_parent = (opts={}) ->
         scroll = win.scrollTop()
         if last_pos?
           delta = scroll - last_pos
-        last_pos = scroll
+          last_pos = scroll
 
-	unless recalced
+	      unless recalced
           offset = if offset_top_element instanceof jQuery then offset_top_element.outerHeight() else offset_top
-
 
         viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth or 0)
         always_unstuck = false
@@ -279,5 +278,3 @@ $.fn.stick_in_parent = (opts={}) ->
 
     ) $ elm
   @
-
-
